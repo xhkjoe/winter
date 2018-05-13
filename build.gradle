@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2018. HangZhou KET XuHekang, All rights reserved.
+ * <http://1092181938@qq.com/>
+ */
+
+group 'hopem.winter'
+version '1.0-RELEASE'
+
+apply plugin: 'java'
+apply plugin: 'application'  //这个插件的作用是为gradle添加一个run的task，gradle run 就是直接执行主类的main方法
+
+mainClassName = "Main" //指定run task的主类
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+//添加task release，类型是Copy
+task release(type: Copy) {
+    //把`/StartModule/build/libs`下的所有jar文件拷贝到`/lib`文件夹下
+    from('StartModule/build/libs') {
+        include '*.jar'
+    }
+    into('lib')
+}
+
+//为release添加指定的依赖，这个依赖是子模块中的task，格式为[:$moduleName:$taskName]
+release.dependsOn(':winter-core:makeJar')
+
+//为run添加指定的依赖release
+run.dependsOn('release')

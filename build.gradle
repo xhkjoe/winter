@@ -32,6 +32,7 @@ task release(type: Copy) {
 
 //为release添加指定的依赖，这个依赖是子模块中的task，格式为[:$moduleName:$taskName]
 release.dependsOn(':winter-core:makeJar')
+release.dependsOn(':winter-beans:makeJar')
 
 //为run添加指定的依赖release
 run.dependsOn('release')

@@ -15,6 +15,7 @@ repositories {
 }
 
 dependencies {
+    compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile project(':') //添加依赖根目录，才可以使用MyAction接口
 }
@@ -22,15 +23,25 @@ dependencies {
 
 //添加一个task，作用为生成jar，生成的jar的目录在该moudle下的/build/libs中
 task makeJar(type: Jar) {
-    baseName 'winter-core' //baseName用来指定生成的jar的名称，jar名称的形式为[$baseName-$version.jar]，所以为了方便我把version的值设为空
+    baseName 'winter-webmvc' //baseName用来指定生成的jar的名称，jar名称的形式为[$baseName-$version.jar]，所以为了方便我把version的值设为空
     version('1.0-RELEASE')
     from('build/classes/main') //指定要添加到jar文件的.class文件的路径
 }
-
-//这个task是用来清除已经生成的jar
+//
+////这个task是用来清除已经生成的jar
 //task clearJar(type: Delete) {
 //    delete 'build/libs'
 //}
 
+//添加task release，类型是Copy
+task release(type: Copy) {
+    //把`/StartModule/build/libs`下的所有jar文件拷贝到`/lib`文件夹下
+    from('winter-core/build/libs') {
+        include '*.jar'
+    }
+    into('lib')
+}
+
+release.dependsOn(':winter-core:makeJar')
 //指定执行makeJar这个task依赖clearJar和build，也就是执行makeJar之前会先clearJar, build，然后才makeJar
-//makeJar.dependsOn( build)
+makeJar.dependsOn( release)

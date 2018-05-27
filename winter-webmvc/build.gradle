@@ -15,7 +15,9 @@ repositories {
 }
 
 dependencies {
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
     compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+    compile fileTree(dir:'/winter-core/build/libs',include:['*.jar'])
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile project(':') //添加依赖根目录，才可以使用MyAction接口
 }
@@ -36,7 +38,7 @@ task makeJar(type: Jar) {
 //添加task release，类型是Copy
 task release(type: Copy) {
     //把`/StartModule/build/libs`下的所有jar文件拷贝到`/lib`文件夹下
-    from('winter-core/build/libs') {
+    from('/winter-core/build/libs') {
         include '*.jar'
     }
     into('lib')
